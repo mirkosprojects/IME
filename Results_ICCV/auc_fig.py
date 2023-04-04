@@ -431,8 +431,8 @@ plt.subplots_adjust(left=0.1,
                     wspace=0.4, 
                     hspace=0.4)
 
-plt.savefig('./' + 'best_auc.eps', format='eps', bbox_inches='tight', pad_inches=0)
-#plt.savefig('./' + 'best_auc.png', format='png')
+# plt.savefig('./' + 'best_auc.eps', format='eps', bbox_inches='tight', pad_inches=0)
+plt.savefig('./' + 'best_auc.png', format='png')
 plt.show()   
     
  

@@ -333,8 +333,8 @@ for k, pixel_thr in enumerate(pixel_thresholds):
       
     plt.gca().add_artist(accuracy_legend)
     
-plt.savefig('./' + '21by' + f'{len(pixel_thresholds)*7}.eps', format='eps', bbox_inches='tight', pad_inches=0)
-#plt.savefig('./' + '21by' + f'{len(pixel_thresholds)*7}.png', format='png')
+# plt.savefig('./' + '21by' + f'{len(pixel_thresholds)*7}.eps', format='eps', bbox_inches='tight', pad_inches=0)
+plt.savefig('./' + '21by' + f'{len(pixel_thresholds)*7}.png', format='png')
 plt.show()
     
 
