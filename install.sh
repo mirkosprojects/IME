@@ -34,6 +34,7 @@ cp utils/Algorithm_Wrappers/SuperGlue/algorithm_wrapper.py Algorithms/SuperGlue
 cp utils/Algorithm_Wrappers/SuperGlue/environment.yml Algorithms/SuperGlue
 
 #Classical Algorithms
+mkdir Algorithms/{akaze,kaze,orb,sift,surf}
 cp utils/Algorithm_Wrappers/sift/algorithm_wrapper.py Algorithms/sift
 cp utils/Algorithm_Wrappers/sift/algorithm_wrapper_util.py Algorithms/sift
 cp utils/Algorithm_Wrappers/sift/environment.yml Algorithms/sift
