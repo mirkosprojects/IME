@@ -98,11 +98,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Create mma and hea plots',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--directory', type=str)
+    parser.add_argument('--result_directory', type=str, default='Results')
+    parser.add_argument('--dataset', type=str, default='hpatches')
     parser.add_argument('--pixel_thresholds', '--pixel_thresholds', nargs='+', default=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
 
     args = parser.parse_known_args()[0]
-    directory = args.directory
+    directory = os.path.join(args.result_directory, args.dataset)
     pixel_thresholds = args.pixel_thresholds
 
     main()
