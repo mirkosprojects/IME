@@ -5,6 +5,8 @@ import numpy as np
 import cv2
 import os
 from skimage.util import random_noise
+from skimage import io
+from skimage.color import rgb2gray
 import shutil
 
 
@@ -67,16 +69,17 @@ def main():
         f.write(f"type: {noise}\n{kwargs_str}")
 
     # add noise to all images from the list
+    # https://stackoverflow.com/questions/59735866/how-to-create-noisy-images-for-data-augmentation
     for img_origin in imagelist:
         # destination path for noisy image
         img_dest = os.path.join(noisy_dataset_dir, os.path.relpath(img_origin, dataset_dir))
 
         # Read image
-        image = cv2.imread(img_origin)
+        image = io.imread(img_origin)
 
-        # TODO: differentiate between color and grayscale images for noise
-        # if len(image.shape) == 2 or (len(image.shape) == 3 and image.shape[2] == 1) or (len(image.shape) == 3 and image[:,:,0] == image[:,:,1]).all() and (image[:,:,0] == image[:,:,2]).all():
-        #     image = cv2.imread(img_path,0)
+        # if image is grayscale, convert to grayscale, else image is colored
+        if len(image.shape) == 2 or (len(image.shape) == 3 and image.shape[2] == 1) or (len(image.shape) == 3 and image[:,:,0] == image[:,:,1]).all() and (image[:,:,0] == image[:,:,2]).all():
+            image = rgb2gray(image)
 
         # Add noise to the image
         image = random_noise(image, mode=noise, **kwargs)
@@ -85,7 +88,7 @@ def main():
         image = np.array(255 * image, dtype=np.uint8)
 
         # save image
-        cv2.imwrite(img_dest, image)
+        io.imsave(img_dest, image)
 
 
 if __name__ == '__main__':
