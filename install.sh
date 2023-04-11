@@ -1,3 +1,10 @@
+#Check if cpu only version is wanted (without cudatoolkit)
+if [ "$1" = "cpu" ]; then
+  env_name="environment_cpu.yml"
+else
+  env_name="environment.yml"
+fi
+
 #Create and activate evaluation environment
 conda env create -f environment.yml
 
@@ -15,13 +22,15 @@ wget -P Algorithms/patch2pix/pretrained https://vision.in.tum.de/webshare/u/zhou
 #Learning-based Algorithms
 cp utils/Algorithm_Wrappers/DFM/python/algorithm_wrapper.py Algorithms/DFM/python
 cp utils/Algorithm_Wrappers/DFM/python/algorithm_wrapper_util.py Algorithms/DFM/python
+cp utils/Algorithm_Wrappers/DFM/python/$env_name Algorithms/DFM/python/environment.yml 2> /dev/null || cp utils/Algorithm_Wrappers/DFM/python/environment.yml Algorithms/DFM/python/environment.yml
 
 cp utils/Algorithm_Wrappers/patch2pix/algorithm_wrapper.py Algorithms/patch2pix
 cp utils/Algorithm_Wrappers/patch2pix/algorithm_wrapper_util.py Algorithms/patch2pix
+cp utils/Algorithm_Wrappers/patch2pix/$env_name Algorithms/patxh2pix/environment.yml 2> /dev/null || cp utils/Algorithm_Wrappers/patch2pix/environment.yml Algorithms/patch2pix/environment.yml
 
 cp utils/Algorithm_Wrappers/SuperPoint/algorithm_wrapper.py Algorithms/SuperPoint
 cp utils/Algorithm_Wrappers/SuperPoint/descriptors_sp.py Algorithms/SuperPoint
-cp utils/Algorithm_Wrappers/SuperPoint/environment.yml Algorithms/SuperPoint
+cp utils/Algorithm_Wrappers/SuperPoint/$env_name Algorithms/SuperPoint/environment.yml 2> /dev/null || cp utils/Algorithm_Wrappers/SuperPoint/environment.yml Algorithms/SuperPoint/environment.yml
 cd Algorithms/SuperPoint
 cp match_pairs.py match_pairs_sp.py
 sed -i -e '272,282d' match_pairs_sp.py
@@ -31,7 +40,7 @@ cd ..
 cd ..
 
 cp utils/Algorithm_Wrappers/SuperGlue/algorithm_wrapper.py Algorithms/SuperGlue
-cp utils/Algorithm_Wrappers/SuperGlue/environment.yml Algorithms/SuperGlue
+cp utils/Algorithm_Wrappers/SuperGlue/$env_name Algorithms/SuperGlue/environment.yml 2> /dev/null || cp utils/Algorithm_Wrappers/SuperGlue/environment.yml Algorithms/SuperGlue/environment.yml
 
 #Classical Algorithms
 mkdir Algorithms/{akaze,kaze,orb,sift,surf}
