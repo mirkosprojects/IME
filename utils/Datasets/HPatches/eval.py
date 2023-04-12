@@ -147,9 +147,9 @@ def main():
     header1 = ['','', '', '', '', 'Illumination All', '', '', '', '', '', '', 
                 '', '', '', '', '', 'Viewpoint All', '', '', '', '', '', '',
                 '', '', '', '', '', 'All Results', '', '', '', '', '', '']
-    header2_mma = ['1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Features','Mmatches',
-                '1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Features','Mmatches',
-                '1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Features','Mmatches']
+    header2_mma = ['1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Features','#Matches',
+                '1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Features','#Matches',
+                '1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Features','#Matches']
     header2_hom = ['1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Matches','#Inliers',
                 '1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Matches','#Inliers',
                 '1px','2px','3px','4px','5px','6px','7px','8px','9px','10px','#Matches','#Inliers']
