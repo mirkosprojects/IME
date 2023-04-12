@@ -61,12 +61,11 @@ def main():
         ax.set_xlabel('Pixel Threshold')
         ax.set_ylabel('MMA')
         ax.yaxis.set_tick_params(labelbottom=True)
+        ax.set_ylim([0, 1])
     axs[0].set_title('Illumination')
     axs[1].set_title('Viewpoint')
     axs[2].set_title('All')
     axs[2].legend(bbox_to_anchor=(1.04, 1), loc="upper left")
-    # handles, labels = axs[2].get_legend_handles_labels()
-    # axs[2].legend(handles[:len(mma_all)], labels[:len(mma_all)], bbox_to_anchor=(1.04, 1), loc="upper left")
 
     plt.savefig(os.path.join(os.path.dirname(result_dirs[0]), 'mma_compare.png'), dpi=300)
 
@@ -95,12 +94,11 @@ def main():
         ax.set_xlabel('Pixel Threshold')
         ax.set_ylabel('HEA')
         ax.yaxis.set_tick_params(labelbottom=True)
+        ax.set_ylim([0, 1])
     axs[0].set_title('Illumination')
     axs[1].set_title('Viewpoint')
     axs[2].set_title('All')
     axs[2].legend(bbox_to_anchor=(1.04, 1), loc="upper left")
-    # handles, labels = axs[2].get_legend_handles_labels()
-    # axs[2].legend(handles[:len(hea_all)], labels[:len(hea_all)], bbox_to_anchor=(1.04, 1), loc="upper left")
 
     plt.savefig(os.path.join(os.path.dirname(result_dirs[0]), 'hea_compare.png'), dpi=300)
 
