@@ -20,6 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--alg_dir', type=str)
     parser.add_argument('--dataset_dir', type=str) 
     parser.add_argument('--output_dir', type=str)    
+    parser.add_argument('--ratio_th', type=float, default=0.9)
 
     args = parser.parse_args()
     
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     # Run SuperGlue, hiding output print with > /dev/null
     os.system('conda run -n ' + args.alg_name + ' python3 ' + args.alg_dir + '/' + 'match_pairs.py' +
               ' --input_dir ' + args.dataset_dir + ' --input_pairs ' + args.dataset_dir + '/' + 'image_pairs.txt' +
-              ' --output_dir ' + args.output_dir + '/' + 'original_outputs' + ' --resize -1' + ' --match_threshold 0.9' ' --superglue "outdoor" > /dev/null')
+              ' --output_dir ' + args.output_dir + '/' + 'original_outputs' + ' --resize -1' + ' --match_threshold ' + str(args.ratio_th) + ' --superglue "outdoor" > /dev/null')
               
     end_time = time.time()
     

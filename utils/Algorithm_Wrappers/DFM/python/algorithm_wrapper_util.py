@@ -20,14 +20,14 @@ if __name__ == '__main__':
     parser.add_argument('--input_dir', type=str)
     parser.add_argument('--input_pairs', type=str)
     parser.add_argument('--output_dir', type=str)   
+    parser.add_argument('--ratio_th', '--ratio_th', nargs='+', type=float, default=[0.9, 0.9, 0.9, 0.9, 0.95, 1.0])
 
-    args_util = parser.parse_args()                    
+    args_util = parser.parse_args()
     
     if not os.path.exists(args_util.output_dir):
         os.makedirs(args_util.output_dir)
     
-    fm = DeepFeatureMatcher(enable_two_stage=True, model = 'VGG19_BN', 
-                        ratio_th = [0.9, 0.9, 0.9, 0.9, 0.95, 1.0], bidirectional=True)
+    fm = DeepFeatureMatcher(enable_two_stage=True, model = 'VGG19_BN', ratio_th = args_util.ratio_th, bidirectional=True)
     
     with open(args_util.input_pairs) as f:
         start_time = time.time()

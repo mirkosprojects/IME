@@ -20,14 +20,36 @@ if __name__ == '__main__':
     parser.add_argument('--alg_dir', type=str)
     parser.add_argument('--dataset_dir', type=str) 
     parser.add_argument('--output_dir', type=str)    
+    parser.add_argument('--ratio_th', type=float, default=0.9)
 
     args = parser.parse_args()
-      
+
+    # ratio thresholds for different layers 
+    # for first three layers: rt=threshold^(1/3), the last two layers stay 0.9 and 0.95
+    if round(args.ratio_th, 1) == 0.1:
+        ratio_th = [0.5, 0.5, 0.5, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.2:
+        ratio_th = [0.6, 0.6, 0.6, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.3:
+        ratio_th = [0.7, 0.7, 0.7, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.4:
+        ratio_th = [0.75, 0.75, 0.75, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.5:
+        ratio_th = [0.8, 0.8, 0.8, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.6:
+        ratio_th = [0.85, 0.85, 0.85, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.7:
+        ratio_th = [0.9, 0.9, 0.9, 0.9, 0.95, 1.0]
+    elif round(args.ratio_th, 1) == 0.8:
+        ratio_th = [0.9, 0.9, 0.9, 0.9, 0.95, 1.0]
+    else:
+        ratio_th = [0.9, 0.9, 0.9, 0.9, 0.95, 1.0]  # Should be 0.95 in every layer?
     
     os.system('conda run -n ' + args.alg_name + ' python3 ' + args.alg_dir + '/' + 'algorithm_wrapper_util.py' +
               ' --alg_dir ' + args.alg_dir + ' --input_dir ' + args.dataset_dir + 
               ' --input_pairs ' + args.dataset_dir + '/' + 'image_pairs.txt' +
-              ' --output_dir ' + args.output_dir + '/' + 'original_outputs') 
+              ' --output_dir ' + args.output_dir + '/' + 'original_outputs' + 
+              ' --ratio_th ' + ' '.join(map(str, ratio_th))) 
     
     # os.system('conda run -n ' + alg + ' python3 ' + alg_directory[alg] + '/' + 'algorithm_wrapper_util.py' +
     #       ' --alg_dir ' + alg_directory[alg] + ' --input_dir ' + dataset_directory[dataset] + 

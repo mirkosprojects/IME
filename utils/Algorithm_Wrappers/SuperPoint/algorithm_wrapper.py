@@ -59,6 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('--alg_dir', type=str)
     parser.add_argument('--dataset_dir', type=str) 
     parser.add_argument('--output_dir', type=str)    
+    parser.add_argument('--ratio_th', type=float, default=0.5)
 
     args = parser.parse_args()
     
@@ -110,8 +111,7 @@ if __name__ == '__main__':
                         descriptors1 = descriptors1.to('cuda')
 		    
                     #Find Matches (used .t() for tensor transpose different from classicals)
-                    mtchs = mnn_ratio_matcher(descriptors0, descriptors1, 
-                                              ratio=0.5, bidirectional = True)
+                    mtchs = mnn_ratio_matcher(descriptors0, descriptors1, ratio=args.ratio_th, bidirectional = True)
 
                     mtchs = mtchs[0]
 		    

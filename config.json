@@ -1,0 +1,20 @@
+{
+    "algorithms": {
+        "sift": "Algorithms/sift",
+        "surf": "Algorithms/surf",
+        "orb": "Algorithms/orb",
+        "kaze": "Algorithms/kaze",
+        "akaze": "Algorithms/akaze",
+        "superpoint": "Algorithms/SuperPoint",
+        "superglue": "Algorithms/SuperGlue",
+        "patch2pix": "Algorithms/patch2pix",
+        "dfm": "Algorithms/DFM/python"
+    },
+    "datasets": {
+        "multi_modal": "Datasets/multi_modal",
+        "hpatches": "Datasets/hpatches",
+        "hpatches_test": "Datasets/hpatches_test",
+        "hpatches_sp": "Datasets/hpatches_sp",
+        "hpatches_speckle": "Datasets/hpatches_speckle"
+    }
+}

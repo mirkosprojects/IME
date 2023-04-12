@@ -21,6 +21,7 @@ if __name__ == '__main__':
     parser.add_argument('--alg_dir', type=str)
     parser.add_argument('--dataset_dir', type=str) 
     parser.add_argument('--output_dir', type=str)    
+    parser.add_argument('--ratio_th', type=float, default=0.9)
 
     args = parser.parse_args()
       
@@ -28,7 +29,8 @@ if __name__ == '__main__':
     os.system('conda run -n ' + args.alg_name + ' python3 ' + args.alg_dir + '/' + 'algorithm_wrapper_util.py' +
               ' --alg_dir ' + args.alg_dir + ' --input_dir ' + args.dataset_dir + 
               ' --input_pairs ' + args.dataset_dir + '/' + 'image_pairs.txt' +
-              ' --output_dir ' + args.output_dir + '/' + 'original_outputs') 
+              ' --output_dir ' + args.output_dir + '/' + 'original_outputs' + 
+              ' --ratio_th ' + str(args.ratio_th)) 
     
     # os.system('conda run -n ' + alg + ' python3 ' + alg_directory[alg] + '/' + 'algorithm_wrapper_util.py' +
     #       ' --alg_dir ' + alg_directory[alg] + ' --input_dir ' + dataset_directory[dataset] + 

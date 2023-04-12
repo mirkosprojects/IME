@@ -85,4 +85,4 @@ rm *.tar.gz
 rm -rf hpatches-sequences-release
 rm -rf hpatches_organizer.py
 cd ..
-cp utils/Datasets/HPatches/eval_hpatches.py Datasets/hpatches
+cp utils/Datasets/HPatches/eval.py Datasets/hpatches

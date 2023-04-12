@@ -60,7 +60,7 @@ def main():
     algorithm_results_hom = {}
         
     for i, alg in enumerate(algorithms):
-        out_dir = result_directory + '/' + dataset + '/' + alg
+        out_dir = os.path.join(result_directory, alg)
         
         all_results_mma = np.empty(shape=[0, 12])
         all_results_hom = np.empty(shape=[0, 12])
@@ -161,8 +161,8 @@ def main():
     df_hom = pd.DataFrame.from_dict(algorithm_results_hom,orient='index', columns=headers_hom)
 
     # print dataframe to csv file
-    df_mma.to_csv(os.path.join(result_directory, dataset, 'overall_results_mma.csv'), float_format='%.2f')
-    df_hom.to_csv(os.path.join(result_directory, dataset, 'overall_results_hom.csv'), float_format='%.2f')
+    df_mma.to_csv(os.path.join(result_directory, 'overall_results_mma.csv'), float_format='%.2f')
+    df_hom.to_csv(os.path.join(result_directory, 'overall_results_hom.csv'), float_format='%.2f')
 
 
 if __name__ == '__main__':
@@ -170,13 +170,11 @@ if __name__ == '__main__':
         description='Algorithm wrapper for Image Matching Evaluation',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--algorithms', '--algorithms', nargs='+', default=[])
-    parser.add_argument('--dataset_name', type=str)
     parser.add_argument('--result_directory', type=str)
     parser.add_argument('--dataset_dir', type=str) 
 
     args = parser.parse_args()
     algorithms = args.algorithms
-    dataset = args.dataset_name
     result_directory = args.result_directory
     dataset_dir = args.dataset_dir
     

@@ -8,40 +8,46 @@ Created on Fri May 21 13:57:24 2021
 
 import os
 from create_virtual_env import create_virtual_env
-from get_names import get_names
+import json
 
-
-# # Get Algorithm and dataset names
-algorithms, alg_directory, datasets, dataset_directory, result_directory = get_names()
-
-# RUN ALGORITHMS and SAVE OUTPUTS
-for i, alg in enumerate(algorithms):
+def main():
+    # import algorithm and dataset locations
+    with open('config.json') as f:
+        config = json.load(f)
     
-    create_virtual_env(alg, alg_directory[alg])
-    
-    for dataset in datasets:
-        print(f'{alg} algorithm is running on {dataset} dataset')
-        out_dir = result_directory + '/' + dataset + '/' + alg
-        
-        if not os.path.exists(out_dir):
-            os.makedirs(out_dir)
-            
-        os.system('python3 ' + alg_directory[alg] + '/' + 'algorithm_wrapper.py' + ' --alg_name ' + alg +
-                  ' --alg_dir ' + alg_directory[alg] + ' --dataset_dir ' + dataset_directory[dataset] + 
-                  ' --output_dir ' + out_dir)
+    # loop ratio thresholds from list
+    for ratio_th in thresholds:
+
+        # disable ratio_th argument if selected best
+        ratio_th_arg = '' if ratio_th == 'best' else ' --ratio_th ' + str(ratio_th)     
+
+        # run feature matching algorithms
+        for alg in algorithms:
+
+            create_virtual_env(alg, config['algorithms'][alg])
+
+            for dataset in datasets:
+                print(f'{alg} algorithm is running on {dataset} dataset')
+                out_dir = os.path.join(results, dataset, str(ratio_th), alg)
+                alg_dir = os.path.join(config['algorithms'][alg], 'algorithm_wrapper.py')
+
+                if not os.path.exists(out_dir):
+                    os.makedirs(out_dir)
+                    
+                os.system('python3 ' + alg_dir + ' --alg_name ' + alg + ' --alg_dir ' + config['algorithms'][alg] + 
+                          ' --dataset_dir ' + config['datasets'][dataset] + ' --output_dir ' + out_dir + ratio_th_arg)
+
+        # PERFORMANCE MEASUREMENT
+        for dataset in datasets:
+            os.system('python3 ' + os.path.join(config['datasets'][dataset], 'eval.py') + ' --algorithms ' + " ".join(algorithms) +
+                      ' --result_directory ' + os.path.join(results, dataset, str(ratio_th)) + ' --dataset_dir ' + config['datasets'][dataset])
     
 
-# PERFORMANCE MEASUREMENT
-for dataset in datasets:
-    if dataset == 'multi_modal':
-        os.system('python3 ' + dataset_directory[dataset] + '/' + 'eval_' + f'{dataset}.py' + ' --algorithms ' + " ".join(algorithms) +
-                  ' --dataset_name ' + dataset + ' --result_directory ' + result_directory + 
-                  ' --dataset_dir ' + dataset_directory[dataset])
-        
-    elif dataset == 'hpatches':
-        os.system('python3 ' + dataset_directory[dataset] + '/' + 'eval_' + f'{dataset}.py' + ' --algorithms ' + " ".join(algorithms) +
-                  ' --dataset_name ' + dataset + ' --result_directory ' + result_directory + 
-                  ' --dataset_dir ' + dataset_directory[dataset])
-    else:
-        print('please provide eval_dataset.py script as above')  
-      
+if __name__ == '__main__':
+    # set up variables
+    algorithms = ['dfm', 'akaze', 'kaze', 'orb', 'sift', 'surf']    # algorithms to run
+    thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]      # use thresholds = ['best'] to use each algorithm with the default threshold
+    results = 'Results_rt'                                          # result directory
+    datasets = ['hpatches', 'hpatches_sp', 'hpatches_speckle']      # datasets to evaluate
+
+    main()

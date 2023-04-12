@@ -22,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--input_pairs', type=str)
     parser.add_argument('--output_dir', type=str) 
     parser.add_argument('--resize', type=str)    
+    parser.add_argument('--ratio_th', type=float, default=0.9)
 
     args_util = parser.parse_args()                    
     
@@ -35,12 +36,12 @@ if __name__ == '__main__':
     
     if METHOD == 'nc':
         # Initialize ncnet matcher
-        args = Namespace(ncn_thres=0.3, imsize=1024, ksize=2,
+        args = Namespace(ncn_thres=0.3, imsize=1024, ksize=2,                                   #TODO: what is ncn_thres?
                           ckpt= args_util.alg_dir + '/pretrained/ncn_ivd_5ep.pth')
         matcher = init_ncn_matcher(args)
     else:
         # Initialize patch2pix matcher
-        args = Namespace(io_thres=0.9, imsize=1024, ksize=2,
+        args = Namespace(io_thres=0.9, imsize=1024, ksize=2,                                    #TODO: is this ratio threshold?
                           ckpt= args_util.alg_dir + '/pretrained/patch2pix_pretrained.pth')
         matcher = init_patch2pix_matcher(args)
     

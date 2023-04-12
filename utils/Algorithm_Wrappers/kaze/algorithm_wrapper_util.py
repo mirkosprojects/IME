@@ -56,6 +56,7 @@ if __name__ == '__main__':
     parser.add_argument('--input_dir', type=str)
     parser.add_argument('--input_pairs', type=str)
     parser.add_argument('--output_dir', type=str)   
+    parser.add_argument('--ratio_th', type=float, default=0.9)
 
     args_util = parser.parse_args()                    
     
@@ -91,8 +92,7 @@ if __name__ == '__main__':
             #    descriptors1 = descriptors1.to('cuda')
               
             #Find matches
-            mtchs = mnn_ratio_matcher(descriptors0, descriptors1, 
-                              ratio=0.9, bidirectional = True)
+            mtchs = mnn_ratio_matcher(descriptors0, descriptors1, ratio=args_util.ratio_th, bidirectional = True)
 
             mtchs = mtchs[0]
             
