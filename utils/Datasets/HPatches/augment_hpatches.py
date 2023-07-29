@@ -2,12 +2,33 @@
 # -*- coding: utf-8 -*-
 import argparse
 import numpy as np
-import cv2
 import os
 from skimage.util import random_noise
 from skimage import io
 from skimage.color import rgb2gray
 import shutil
+
+def args_to_dict(arguments):
+    """
+    Turn a list of arguments indicated by '--' into a dictonary
+    """
+    argument_dict = {}            
+    split_pos = [idx for idx, argument in enumerate(arguments) if argument.startswith("--")]
+    split_pos.append(len(arguments))
+
+    for i in range(len(split_pos) - 1):
+        left_pos = split_pos[i]
+        right_pos = split_pos[i+1]
+        
+        if right_pos - left_pos < 2:
+            continue
+
+        key = arguments[left_pos].lstrip("--")
+        values = arguments[left_pos+1 : right_pos] if len(arguments[left_pos+1 : right_pos]) > 1 else arguments[left_pos+1]
+
+        argument_dict[key] = values
+    
+    return argument_dict
 
 
 def recursive_copy(origin: str, destination: str, ext = ['.ppm'], image_list = []):
@@ -37,18 +58,6 @@ def recursive_copy(origin: str, destination: str, ext = ['.ppm'], image_list = [
 
 
 def main():
-
-    # noise additional parameters
-    if noise == 's&p':
-        kwargs = {
-            'amount': 0.011
-        }
-    elif noise == 'speckle':
-        kwargs = {
-            'mean': 0.1
-        }
-    else:
-        kwargs = {}
 
     # check if directories exist
     noisy_dataset_dir = os.path.join(os.path.dirname(dataset_dir), os.path.basename(dataset_dir) + '_' + noise)
@@ -80,12 +89,19 @@ def main():
         # if image is grayscale, convert to grayscale, else image is colored
         if len(image.shape) == 2 or (len(image.shape) == 3 and image.shape[2] == 1) or (len(image.shape) == 3 and image[:,:,0] == image[:,:,1]).all() and (image[:,:,0] == image[:,:,2]).all():
             image = rgb2gray(image)
+            grayscale = True
+        else:
+            grayscale = False
 
         # Add noise to the image
         image = random_noise(image, mode=noise, **kwargs)
 
         # change floating point noise to 8-bit
         image = np.array(255 * image, dtype=np.uint8)
+
+        # change to srgb format if greyscale
+        if grayscale:
+            image = np.stack([image] * 3, axis=-1)
 
         # save image
         io.imsave(img_dest, image)
@@ -97,11 +113,14 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--extensions', '--extensions', nargs='+', default=['.ppm'])
     parser.add_argument('--dataset_dir', type=str)
-    parser.add_argument('--noise', type=str, default='s&p')
+    parser.add_argument('--noise', type=str, default='gaussian')
 
-    args = parser.parse_known_args()[0]
+    args, unknown_args = parser.parse_known_args()
     file_extensions = args.extensions
     dataset_dir = args.dataset_dir
     noise = args.noise
 
+    # check additional arguments for noise parameters
+    kwargs = args_to_dict(unknown_args)
+    
     main()
