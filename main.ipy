@@ -29,12 +29,12 @@ def main():
             for dataset in datasets:
                 print(f'{alg} algorithm is running on {dataset} dataset')
                 out_dir = os.path.join(results, dataset, str(ratio_th), alg)
-                alg_dir = os.path.join(config['algorithms'][alg], 'algorithm_wrapper.py')
+                alg_wrapper = os.path.join(config['algorithms'][alg], 'algorithm_wrapper.py')
 
                 if not os.path.exists(out_dir):
                     os.makedirs(out_dir)
                     
-                os.system('python3 ' + alg_dir + ' --alg_name ' + alg + ' --alg_dir ' + config['algorithms'][alg] + 
+                os.system('python3 ' + alg_wrapper + ' --alg_name ' + alg + ' --alg_dir ' + config['algorithms'][alg] + 
                           ' --dataset_dir ' + config['datasets'][dataset] + ' --output_dir ' + out_dir + ratio_th_arg)
 
         # PERFORMANCE MEASUREMENT

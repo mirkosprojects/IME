@@ -4,24 +4,7 @@
 import argparse
 import os
 import matplotlib.pyplot as plt
-
-def read_results(filename: str, pixel_thresholds: list):
-    """Reads the overall_results.csv file and returns dictonaries containing the results"""
-    res_illumination = {}
-    res_viewpoint = {}
-    res_all = {}
-
-    # read csv file into dictonaries
-    with open(filename) as f:
-        for idx, line in enumerate(f):
-            line = line.split(',')
-            alg = line[0]
-            if idx >=2:
-                res_illumination[alg] = [float(line[i+1]) for i, value in enumerate(pixel_thresholds)]
-                res_viewpoint[alg] = [float(line[i+13]) for i, value in enumerate(pixel_thresholds)]
-                res_all[alg] = [float(line[i+25]) for i, value in enumerate(pixel_thresholds)]
-    return res_illumination, res_viewpoint, res_all
-
+from plot_utils import read_results
 
 def main():
     """
@@ -32,21 +15,21 @@ def main():
     
     ######## Mean Matching Accuracy (MMA) #########
 
-    mma_illumination, mma_viewpoint, mma_all = read_results(os.path.join(directory, 'overall_results_mma.csv'), pixel_thresholds)
+    mma_illumination, mma_viewpoint, mma_all, pixel_thresholds = read_results(os.path.join(directory, 'overall_results_mma.csv'))
     
     # create figure and axes
     fig, axs = plt.subplots(1, 3, figsize=(17, 5), sharey=True)
 
     # create illumination subplot
-    for alg in mma_illumination.keys():
+    for alg in sorted(mma_illumination.keys()):
         axs[0].plot(pixel_thresholds, mma_illumination[alg], label=alg)
 
     # create viewpoint subplot
-    for alg in mma_viewpoint.keys():
+    for alg in sorted(mma_viewpoint.keys()):
         axs[1].plot(pixel_thresholds, mma_viewpoint[alg], label=alg)
     
     # create all subplot
-    for alg in mma_all.keys():
+    for alg in sorted(mma_all.keys()):
         axs[2].plot(pixel_thresholds, mma_all[alg], label=alg)
     
     # labels, title and legend
@@ -64,21 +47,21 @@ def main():
 
     ######## Homography Estimation Accuracy (HEA) #########
 
-    hea_illumination, hea_viewpoint, hea_all = read_results(os.path.join(directory, 'overall_results_hom.csv'), pixel_thresholds)
+    hea_illumination, hea_viewpoint, hea_all, pixel_thresholds = read_results(os.path.join(directory, 'overall_results_hom.csv'))
     
     # create figure and axes
     fig, axs = plt.subplots(1, 3, figsize=(17, 5), sharey=True)
 
     # create illumination subplot
-    for alg in hea_illumination.keys():
+    for alg in sorted(hea_illumination.keys()):
         axs[0].plot(pixel_thresholds, hea_illumination[alg], label=alg)
 
     # create viewpoint subplot
-    for alg in hea_viewpoint.keys():
+    for alg in sorted(hea_viewpoint.keys()):
         axs[1].plot(pixel_thresholds, hea_viewpoint[alg], label=alg)
     
     # create all subplot
-    for alg in hea_all.keys():
+    for alg in sorted(hea_all.keys()):
         axs[2].plot(pixel_thresholds, hea_all[alg], label=alg)
     
     # labels, title and legend
@@ -96,14 +79,12 @@ def main():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Create mma and hea plots',
+        description='Create MMA and HEA plots for a single dataset',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--result_directory', type=str, default='Results')
     parser.add_argument('--dataset', type=str, default='hpatches')
-    parser.add_argument('--pixel_thresholds', '--pixel_thresholds', nargs='+', default=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
 
     args = parser.parse_known_args()[0]
     directory = os.path.join(args.result_directory, args.dataset)
-    pixel_thresholds = args.pixel_thresholds
 
     main()

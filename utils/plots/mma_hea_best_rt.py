@@ -7,44 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import itertools
 import numpy as np
-
-def read_results(filename: str, pixel_thresholds: list):
-    """Reads the overall_results.csv file and returns dictonaries containing the results"""
-    res_illumination = {}
-    res_viewpoint = {}
-    res_all = {}
-
-    # read csv file into dictonaries
-    with open(filename) as f:
-        for idx, line in enumerate(f):
-            line = line.split(',')
-            alg = line[0]
-            if idx >=2:
-                res_illumination[alg] = [float(line[i+1]) for i, value in enumerate(pixel_thresholds)]
-                res_viewpoint[alg] = [float(line[i+13]) for i, value in enumerate(pixel_thresholds)]
-                res_all[alg] = [float(line[i+25]) for i, value in enumerate(pixel_thresholds)]
-    return res_illumination, res_viewpoint, res_all
-
-def calculate_auc(data: list):
-    """Calculates the area under curve (AUC) using the trapezoidal rule"""
-    data = np.array(data)
-    return np.sum(data[:-1] + data[1:]) / 2
-
-def check_best_result(best: dict, current: dict, thresholds: dict, threshold: str):
-    """Returns a dictonary containing the results with the highest AUC for every algorithm"""
-    result_dict = {}
-    if not best:
-        thresholds = dict.fromkeys(current.keys())
-        return current, thresholds
-    else:
-        for alg in current:
-            if calculate_auc(best[alg]) > calculate_auc(current[alg]):
-                result_dict[alg] = best[alg] 
-            else:
-                result_dict[alg] = current[alg]
-                thresholds[alg] = threshold
-
-    return result_dict, thresholds
+from plot_utils import read_results, check_best_result, calculate_auc
 
 def main():
     """
@@ -73,7 +36,7 @@ def main():
 
         ######## Mean Matching Accuracy (MMA) #########
 
-        mma_illumination, mma_viewpoint, mma_all = read_results(os.path.join(rt_dir, 'overall_results_mma.csv'), pixel_thresholds)
+        mma_illumination, mma_viewpoint, mma_all, pixel_thresholds = read_results(os.path.join(rt_dir, 'overall_results_mma.csv'))
 
         # calculate the result with highest auc
         best_auc_illumination, thresholds_illimination = check_best_result(best_auc_illumination, mma_illumination, thresholds_illimination, rt)
@@ -122,7 +85,7 @@ def main():
     for rt_dir, rt in zip(result_dirs, ratio_thresholds):
         ######## Homography Estimation Accuracy (HEA) #########
 
-        hea_illumination, hea_viewpoint, hea_all = read_results(os.path.join(rt_dir, 'overall_results_hom.csv'), pixel_thresholds)
+        hea_illumination, hea_viewpoint, hea_all, pixel_thresholds = read_results(os.path.join(rt_dir, 'overall_results_hom.csv'))
 
         # calculate the result with highest auc
         best_auc_illumination, thresholds_illimination = check_best_result(best_auc_illumination, hea_illumination, thresholds_illimination, rt)
@@ -159,16 +122,14 @@ def main():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Create mma and hea plots',
+        description='Create best MMA and HEA plots from multiple thresholds',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--result_directory', type=str, default='Results')
     parser.add_argument('--dataset', type=str, default='hpatches')
-    parser.add_argument('--pixel_thresholds', '--pixel_thresholds', nargs='+', default=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
     parser.add_argument('--ratio_thresholds', '--ratio_thresholds', nargs='+', default=['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9'])
 
     args = parser.parse_known_args()[0]
     result_dirs = [os.path.join(args.result_directory, args.dataset, rt) for rt in args.ratio_thresholds]
-    pixel_thresholds = args.pixel_thresholds
     ratio_thresholds = args.ratio_thresholds
 
     main()

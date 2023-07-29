@@ -5,24 +5,7 @@ import argparse
 import os
 import matplotlib.pyplot as plt
 import itertools
-
-def read_results(filename: str, pixel_thresholds: list):
-    """Reads the overall_results.csv file and returns dictonaries containing the results"""
-    res_illumination = {}
-    res_viewpoint = {}
-    res_all = {}
-
-    # read csv file into dictonaries
-    with open(filename) as f:
-        for idx, line in enumerate(f):
-            line = line.split(',')
-            alg = line[0]
-            if idx >=2:
-                res_illumination[alg] = [float(line[i+1]) for i, value in enumerate(pixel_thresholds)]
-                res_viewpoint[alg] = [float(line[i+13]) for i, value in enumerate(pixel_thresholds)]
-                res_all[alg] = [float(line[i+25]) for i, value in enumerate(pixel_thresholds)]
-    return res_illumination, res_viewpoint, res_all
-
+from plot_utils import read_results
 
 def main():
     """
@@ -42,7 +25,7 @@ def main():
 
         ######## Mean Matching Accuracy (MMA) #########
 
-        mma_illumination, mma_viewpoint, mma_all = read_results(os.path.join(dataset_dir, 'overall_results_mma.csv'), pixel_thresholds)
+        mma_illumination, mma_viewpoint, mma_all, pixel_thresholds = read_results(os.path.join(dataset_dir, 'overall_results_mma.csv'))
         
         # create illumination subplot
         for alg, color in zip(sorted(mma_illumination.keys()), itertools.cycle(colors)):
@@ -67,7 +50,7 @@ def main():
     axs[2].set_title('All')
     axs[2].legend(bbox_to_anchor=(1.04, 1), loc="upper left")
 
-    plt.savefig(os.path.join(os.path.dirname(result_dirs[0]), 'mma_compare.png'), dpi=300)
+    plt.savefig(os.path.join(result_directory, f"mma_{result_name}.png"), dpi=300)
 
     # create figure and axes
     fig, axs = plt.subplots(1, 3, figsize=(17, 5), sharey=True)
@@ -75,7 +58,7 @@ def main():
     for dataset_dir, linestyle in zip(result_dirs, itertools.cycle(linestyles)):
         ######## Homography Estimation Accuracy (HEA) #########
 
-        hea_illumination, hea_viewpoint, hea_all = read_results(os.path.join(dataset_dir, 'overall_results_hom.csv'), pixel_thresholds)
+        hea_illumination, hea_viewpoint, hea_all, pixel_thresholds = read_results(os.path.join(dataset_dir, 'overall_results_hom.csv'))
 
         # create illumination subplot
         for alg, color in zip(sorted(hea_illumination.keys()), itertools.cycle(colors)):
@@ -100,19 +83,19 @@ def main():
     axs[2].set_title('All')
     axs[2].legend(bbox_to_anchor=(1.04, 1), loc="upper left")
 
-    plt.savefig(os.path.join(os.path.dirname(result_dirs[0]), 'hea_compare.png'), dpi=300)
+    plt.savefig(os.path.join(result_directory, f"hea_{result_name}.png"), dpi=300)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Create mma and hea plots',
+        description='Create MMA and HEA plots from multiple datasets',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--result_directory', type=str, default='Results')
     parser.add_argument('--datasets', '--datasets', nargs='+', default=['hpatches'])
-    parser.add_argument('--pixel_thresholds', '--pixel_thresholds', nargs='+', default=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
 
     args = parser.parse_known_args()[0]
     result_dirs = [os.path.join(args.result_directory, dataset) for dataset in args.datasets]
-    pixel_thresholds = args.pixel_thresholds
+    result_directory = args.result_directory
+    result_name = "_".join(args.datasets).replace("/", "-")
 
     main()
