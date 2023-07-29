@@ -60,7 +60,7 @@ def recursive_copy(origin: str, destination: str, ext = ['.ppm'], image_list = [
 def main():
 
     # check if directories exist
-    noisy_dataset_dir = os.path.join(os.path.dirname(dataset_dir), os.path.basename(dataset_dir) + '_' + noise)
+    noisy_dataset_dir = os.path.join(os.path.dirname(dataset_dir), noisy_dataset_name)
     if os.path.exists(noisy_dataset_dir):
         print(f"Dataset {noisy_dataset_dir} already exists, exiting...")
         return(1)
@@ -113,11 +113,13 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--extensions', '--extensions', nargs='+', default=['.ppm'])
     parser.add_argument('--dataset_dir', type=str)
+    parser.add_argument('--name', type=str, default="noisy_dataset")
     parser.add_argument('--noise', type=str, default='gaussian')
 
     args, unknown_args = parser.parse_known_args()
     file_extensions = args.extensions
     dataset_dir = args.dataset_dir
+    noisy_dataset_name = args.name
     noise = args.noise
 
     # check additional arguments for noise parameters
