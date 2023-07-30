@@ -37,6 +37,7 @@ def main():
         ax.set_xlabel('Pixel Threshold')
         ax.set_ylabel('MMA')
         ax.yaxis.set_tick_params(labelbottom=True)
+        ax.set_ylim([0, 1])
     axs[0].set_title('Illumination')
     axs[1].set_title('Viewpoint')
     axs[2].set_title('All')
